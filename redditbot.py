@@ -2,7 +2,7 @@ import praw, time, numpy as np
 
 r = praw.Reddit(client_id="UslSnVNZH56Pzg",
 				client_secret="y7RlHeFaF5vTmRvAV4_qkylPv5c",
-				username="markovchaincomment", password="PLACEHOLDER",
+				username="markovchaincomment", password="Important@123!",
 				user_agent="Creates markov chains based on recent comments by a user. Created by /u/comsciftw")
 backlog = []
 		
@@ -73,9 +73,11 @@ for comment in r.subreddit("testcomsciftw").stream.comments():
 		print("clearing out comment from backlog")
 		comment, rep = backlog.pop(0)
 		safe_reply(comment, rep, True)
-	comment.refresh()
-	comment.replies.replace_more(limit=0)
-	if comment.body.startswith("!markovchaincomment") and r.user.me().fullname not in {c.author.fullname for c in comment.replies.list()}:
+	if comment.body.startswith("!markovchaincomment"):
+		comment.refresh()
+		comment.replies.replace_more(limit=0)
+		if r.user.me().fullname in {c.author.fullname for c in comment.replies.list()}:
+			continue
 		print("found comment! " + comment.body)
 		b = comment.body.split()
 		if len(b) < 2:
