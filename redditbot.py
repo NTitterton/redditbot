@@ -65,7 +65,7 @@ def safe_reply(comment, rep, from_backlog=False):
 		backlog.append((comment, rep))
 		print(e)
 		print("added to backlog and sleeping for 9 minutes...")
-		time.sleep(540)
+		time.sleep(541)
 
 for comment in r.subreddit("testcomsciftw").stream.comments():
 	# print("comment: " + comment.body)
