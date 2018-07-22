@@ -1,4 +1,4 @@
-import praw, time, boto3, numpy as np
+import praw, boto3
 
 sqs = boto3.resource("sqs")
 queue = sqs.create_queue(QueueName="comments", Attributes={'DelaySeconds': '5'})
@@ -6,6 +6,7 @@ queue = sqs.create_queue(QueueName="comments", Attributes={'DelaySeconds': '5'})
 def start(r):
 	try:
 		for comment in r.subreddit("testcomsciftw").stream.comments():
+			# print(comment.body)
 			if comment.body.startswith("!markovchaincomment"):
 				print("found comment! " + comment.body)
 				comment.refresh()
@@ -16,14 +17,14 @@ def start(r):
 				b = comment.body.split() # you can do this part more efficiently but it's cleaner this way
 				if len(b) < 2:
 					print("No username specified. Queueing...")
-					queue.send_message(MessageBody=comment.id, MessageAttributes={"reply":{"StringValue":"no username specified","DataType":"String"}})
+					queue.send_message(MessageBody=comment.id, MessageAttributes={"reply":{"StringValue":"No username specified.","DataType":"String"}})
 					continue
 				print("Queueing...")
 				queue.send_message(MessageBody=comment.id)
 	except Exception as e: # should be more specific but the docs' prawcore.OAuthException doesn't work
 		print(e)
-		r = praw.Reddit(client_id="UslSnVNZH56Pzg", client_secret="y7RlHeFaF5vTmRvAV4_qkylPv5c", username="markovchaincomment", password="Important@123!", user_agent="Creates markov chains based on recent comments by a user. Created by /u/comsciftw")
+		r = praw.Reddit(client_id="UslSnVNZH56Pzg", client_secret="y7RlHeFaF5vTmRvAV4_qkylPv5c", username="markovchaincomment", password="PLACEHOLDER", user_agent="Creates markov chains based on recent comments by a user. Created by /u/comsciftw")
 		start(r)
 
-r = praw.Reddit(client_id="UslSnVNZH56Pzg", client_secret="y7RlHeFaF5vTmRvAV4_qkylPv5c", username="markovchaincomment", password="Important@123!", user_agent="Creates markov chains based on recent comments by a user. Created by /u/comsciftw")
+r = praw.Reddit(client_id="UslSnVNZH56Pzg", client_secret="y7RlHeFaF5vTmRvAV4_qkylPv5c", username="markovchaincomment", password="PLACEHOLDER", user_agent="Creates markov chains based on recent comments by a user. Created by /u/comsciftw")
 start(r)
