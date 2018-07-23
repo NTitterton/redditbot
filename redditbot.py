@@ -9,7 +9,7 @@ def start(r):
 			# print(comment.body)
 			if comment.body.startswith("!markovchaincomment"):
 				print("found comment! " + comment.body)
-				comment.refresh()
+				comment.refresh() # these two lines make sure the replies appear
 				comment.replies.replace_more(limit=0)
 				if r.user.me().fullname in {c.author.fullname for c in comment.replies.list()}:
 					print("already replied to comment")
@@ -23,8 +23,8 @@ def start(r):
 				queue.send_message(MessageBody=comment.id)
 	except Exception as e: # should be more specific but the docs' prawcore.OAuthException doesn't work
 		print(e)
-		r = praw.Reddit(client_id="UslSnVNZH56Pzg", client_secret="y7RlHeFaF5vTmRvAV4_qkylPv5c", username="markovchaincomment", password="PLACEHOLDER", user_agent="Creates markov chains based on recent comments by a user. Created by /u/comsciftw")
+		r = praw.Reddit(client_id="UslSnVNZH56Pzg", client_secret="y7RlHeFaF5vTmRvAV4_qkylPv5c", username="markovchaincomment", password="Important@123!", user_agent="Creates markov chains based on recent comments by a user. Created by /u/comsciftw")
 		start(r)
 
-r = praw.Reddit(client_id="UslSnVNZH56Pzg", client_secret="y7RlHeFaF5vTmRvAV4_qkylPv5c", username="markovchaincomment", password="PLACEHOLDER", user_agent="Creates markov chains based on recent comments by a user. Created by /u/comsciftw")
+r = praw.Reddit(client_id="UslSnVNZH56Pzg", client_secret="y7RlHeFaF5vTmRvAV4_qkylPv5c", username="markovchaincomment", password="Important@123!", user_agent="Creates markov chains based on recent comments by a user. Created by /u/comsciftw")
 start(r)

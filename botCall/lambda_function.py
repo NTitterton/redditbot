@@ -18,19 +18,16 @@ def lambda_handler(event, context):
 	try:
 		comment = r.comment(event["Records"][0]["body"])
 	except:
-		print("Comment ID " + str(comment.id) + " not valid.")
-		return
+		return print("Comment ID " + str(comment.id) + " not valid.")
 
 	if "messageAttributes" in event["Records"][0] and "reply" in event["Records"][0]["messageAttributes"]:
 		rep = event["Records"][0]["messageAttributes"]["reply"]["stringValue"]
-		print(safe_reply(comment, rep))
-		return
+		return print(safe_reply(comment, rep))
 
 	try:
 		u = r.redditor(comment.body.split()[1])
 	except:
-		print(safe_reply(comment, comment.body.split()[1] + " does not exist."))
-		return
+		return print(safe_reply(comment, comment.body.split()[1] + " does not exist."))
 	
 	words = {False:{}} # add special start state
 	discount_rate = 1
@@ -56,15 +53,13 @@ def lambda_handler(event, context):
 	try:
 		rep, curr_word, count = "", random.choices(keys, weights=vals)[0], 0
 	except ValueError:
-		print(safe_reply(comment, "That user appears to have no comments."))
-		return
+		return print(safe_reply(comment, "That user appears to have no comments."))
 	while curr_word and count < 256: # generate markov chain, cap at 256 words
 		rep += " " + curr_word
 		try: # for some reason this is giving a KeyError: '0', so this is a temp fix
 			keys, vals = list(words[curr_word].keys()), list(words[curr_word].values())
 		except KeyError:
-			print(safe_reply(comment, "Bot says: Oh no! Something went wrong!"))
-			return
+			return print(safe_reply(comment, "Bot says: Oh no! Something went wrong!"))
 		curr_word = random.choices(keys, weights=vals)[0]
 		count += 1
 
